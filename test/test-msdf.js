@@ -10,11 +10,11 @@
 
 global.THREE = require('three')
 var createOrbitViewer = require('three-orbit-viewer')(THREE)
-var shuffle = require('array-shuffle')
+import shuffle from 'array-shuffle';
 var quotes = shuffle(require('sun-tzu-quotes/quotes.json').join(' ').split('.'))
-var createText = require('../')
-var MSDFShader = require('../shaders/msdf')
-var palettes = require('nice-color-palettes')
+import createText from '../';
+import MSDFShader from '../shaders/msdf';
+import palettes from 'nice-color-palettes';
 var palette = palettes[5]
 var background = palette.shift()
 

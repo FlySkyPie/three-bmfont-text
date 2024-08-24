@@ -5,11 +5,11 @@
  */
 
 global.THREE = require('three')
-var quote = require('sun-tzu-quotes')
+import quote from 'sun-tzu-quotes';
 var createOrbitViewer = require('three-orbit-viewer')(THREE)
-var createBackground = require('three-vignette-background')
-var createText = require('../')
-var glslify = require('glslify')
+import createBackground from 'three-vignette-background';
+import createText from '../';
+import glslify from 'glslify';
 
 require('./load')({
   font: 'fnt/DejaVu-sdf.fnt',

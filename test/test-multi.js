@@ -16,9 +16,9 @@
 
 global.THREE = require('three')
 var createOrbitViewer = require('three-orbit-viewer')(THREE)
-var createText = require('../')
-var Promise = require('bluebird')
-var Shader = require('../shaders/multipage')
+import createText from '../';
+import Promise from 'bluebird';
+import Shader from '../shaders/multipage';
 var loadFont = Promise.promisify(require('load-bmfont'))
 
 // parallel load our font / textures

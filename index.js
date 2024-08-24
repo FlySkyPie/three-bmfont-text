@@ -1,13 +1,12 @@
-var createLayout = require('layout-bmfont-text')
-var createIndices = require('quad-indices')
+import createLayout from 'layout-bmfont-text';
+import createIndices from 'quad-indices';
 
-var vertices = require('./lib/vertices')
-var utils = require('./lib/utils')
+import vertices from './lib/vertices';
+import utils from './lib/utils';
 
-
-module.exports = function createTextGeometry (opt) {
+export default function createTextGeometry (opt) {
   return new TextGeometry(opt)
-}
+};
 
 class TextGeometry extends THREE.BufferGeometry {
   constructor (opt) {

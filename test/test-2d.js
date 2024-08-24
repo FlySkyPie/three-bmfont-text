@@ -10,7 +10,7 @@
 
 global.THREE = require('three')
 var createOrbitViewer = require('three-orbit-viewer')(THREE)
-var createText = require('../')
+import createText from '../';
 
 require('./load')({
   font: 'fnt/Lato-Regular-64.fnt',

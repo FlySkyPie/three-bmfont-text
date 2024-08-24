@@ -1,6 +1,6 @@
-var assign = require('object-assign')
+import assign from 'object-assign';
 
-module.exports = function createSDFShader (opt) {
+export default function createSDFShader (opt) {
   opt = opt || {}
   var opacity = typeof opt.opacity === 'number' ? opt.opacity : 1
   var alphaTest = typeof opt.alphaTest === 'number' ? opt.alphaTest : 0.0001
@@ -60,4 +60,4 @@ module.exports = function createSDFShader (opt) {
       '}'
     ].join('\n')
   }, opt)
-}
+};
