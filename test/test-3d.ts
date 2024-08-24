@@ -7,18 +7,23 @@
   crisp rendering at sharp angles.
  */
 
-global.THREE = require('three')
-var createOrbitViewer = require('three-orbit-viewer')(THREE)
-import createText from '../';
+import * as THREE from 'three';
+import orbitViewer from 'three-orbit-viewer';
+
+import createText from '../lib';
 import SDFShader from '../shaders/sdf';
 
+import load from './load';
+
+var createOrbitViewer = orbitViewer(THREE);
+
 // load up a 'fnt' and texture
-require('./load')({
+load({
   font: 'fnt/DejaVu-sdf.fnt',
   image: 'fnt/DejaVu-sdf.png'
 }, start)
 
-function start (font, texture) {
+function start(font, texture) {
   var app = createOrbitViewer({
     clearColor: 'rgb(40, 40, 40)',
     clearAlpha: 1.0,
@@ -73,7 +78,7 @@ function start (font, texture) {
   })
 }
 
-function getCopy () {
+function getCopy() {
   return [
     'Total characters: 3,326',
     'Click + drag to rotate',

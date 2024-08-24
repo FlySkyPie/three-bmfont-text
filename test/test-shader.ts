@@ -3,20 +3,27 @@
   a custom shader, special per-line shader effects,
   and glslify.
  */
-
-global.THREE = require('three')
+import * as THREE from 'three';
 import quote from 'sun-tzu-quotes';
-var createOrbitViewer = require('three-orbit-viewer')(THREE)
+import orbitViewer from 'three-orbit-viewer';
 import createBackground from 'three-vignette-background';
-import createText from '../';
 import glslify from 'glslify';
 
-require('./load')({
+import createText from '../lib';
+
+import vertexShader from './shaders/fx.vert?raw';
+import fragmentShader from './shaders/fx.frag?raw';
+
+import load from './load';
+
+var createOrbitViewer = orbitViewer(THREE);
+
+load({
   font: 'fnt/DejaVu-sdf.fnt',
   image: 'fnt/DejaVu-sdf.png'
 }, start)
 
-function start (font, texture) {
+function start(font, texture) {
   var app = createOrbitViewer({
     clearColor: 'rgb(40, 40, 40)',
     clearAlpha: 1.0,
@@ -35,8 +42,8 @@ function start (font, texture) {
   })
 
   var material = new THREE.RawShaderMaterial({
-    vertexShader: glslify(__dirname + '/shaders/fx.vert'),
-    fragmentShader: glslify(__dirname + '/shaders/fx.frag'),
+    vertexShader: glslify(vertexShader),
+    fragmentShader: glslify(fragmentShader),
     uniforms: {
       animate: { type: 'f', value: 1 },
       iGlobalTime: { type: 'f', value: 0 },
@@ -79,7 +86,7 @@ function start (font, texture) {
     })
   })
 
-  function next () {
+  function next() {
     // set new text string
     geom.update(quote())
 
@@ -97,7 +104,7 @@ function start (font, texture) {
       // map to 0..1 for attribute
       var t = lineCount <= 1 ? 1 : (line / (lineCount - 1))
       // quad - 4 verts
-      return [ t, t, t, t ]
+      return [t, t, t, t]
     }).reduce(function (a, b) {
       return a.concat(b)
     }, [])

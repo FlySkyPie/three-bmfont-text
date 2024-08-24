@@ -14,12 +14,16 @@
   })
  */
 
-global.THREE = require('three')
-var createOrbitViewer = require('three-orbit-viewer')(THREE)
-import createText from '../';
+import * as THREE from 'three';
+import orbitViewer from 'three-orbit-viewer';
 import Promise from 'bluebird';
+import loadBmfont from 'load-bmfont';
+
+import createText from '../lib';
 import Shader from '../shaders/multipage';
-var loadFont = Promise.promisify(require('load-bmfont'))
+
+var createOrbitViewer = orbitViewer(THREE);
+var loadFont = Promise.promisify(loadBmfont)
 
 // parallel load our font / textures
 Promise.all([
@@ -32,7 +36,7 @@ Promise.all([
   start(assets[0], assets.slice(1))
 })
 
-function start (font, textures) {
+function start(font, textures) {
   var app = createOrbitViewer({
     clearColor: 'rgb(80, 80, 80)',
     clearAlpha: 1.0,
@@ -40,7 +44,7 @@ function start (font, textures) {
     position: new THREE.Vector3()
   })
 
-  app.camera = new THREE.OrthographicCamera()
+  app.camera = new (THREE.OrthographicCamera as any)()
   app.camera.left = 0
   app.camera.top = 0
   app.camera.near = -100
@@ -87,7 +91,7 @@ function start (font, textures) {
   })
 }
 
-function loadTexture (path) {
+function loadTexture(path) {
   return new Promise(function (resolve, reject) {
     THREE.ImageUtils.loadTexture(path, undefined, resolve, reject)
   })

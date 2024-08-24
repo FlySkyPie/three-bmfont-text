@@ -1,15 +1,26 @@
+import * as THREE from 'three';
 import createLayout from 'layout-bmfont-text';
 import createIndices from 'quad-indices';
 
-import vertices from './lib/vertices';
-import utils from './lib/utils';
+import * as vertices from './vertices';
+import * as utils from './utils';
 
-export default function createTextGeometry (opt) {
+export default function createTextGeometry(opt: any) {
   return new TextGeometry(opt)
 };
 
 class TextGeometry extends THREE.BufferGeometry {
-  constructor (opt) {
+  public _opt: any;
+  public layout: any;
+  public visibleGlyphs: any;
+  // public setIndex: any;
+  // public setAttribute: any;
+  // public attributes: any;
+  // public removeAttribute: any;
+  // public boundingBox: any;
+  // public boundingSphere: any;
+
+  constructor(opt: any) {
     super()
 
     if (typeof opt === 'string') {
@@ -24,7 +35,7 @@ class TextGeometry extends THREE.BufferGeometry {
     if (opt) this.update(opt)
   }
 
-  update(opt) {
+  update(opt: any) {
     if (typeof opt === 'string') {
       opt = { text: opt }
     }
@@ -49,7 +60,7 @@ class TextGeometry extends THREE.BufferGeometry {
     var texHeight = font.common.scaleH
 
     // get visible glyphs
-    var glyphs = this.layout.glyphs.filter(function (glyph) {
+    var glyphs = this.layout.glyphs.filter(function (glyph: any) {
       var bitmap = glyph.data
       return bitmap.width * bitmap.height > 0
     })
@@ -67,6 +78,7 @@ class TextGeometry extends THREE.BufferGeometry {
     })
 
     // update vertex data
+    console.log(this)
     this.setIndex(indices)
     this.setAttribute('position', new THREE.BufferAttribute(positions, 2))
     this.setAttribute('uv', new THREE.BufferAttribute(uvs, 2))

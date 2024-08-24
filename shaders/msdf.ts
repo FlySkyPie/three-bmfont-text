@@ -1,4 +1,5 @@
 import assign from 'object-assign';
+import * as THREE from 'three';
 
 export default function createMSDFShader (opt) {
   opt = opt || {};

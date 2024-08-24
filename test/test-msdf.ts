@@ -8,22 +8,30 @@
   })
  */
 
-global.THREE = require('three')
-var createOrbitViewer = require('three-orbit-viewer')(THREE)
+import * as THREE from 'three';
+import orbitViewer from 'three-orbit-viewer';
 import shuffle from 'array-shuffle';
-var quotes = shuffle(require('sun-tzu-quotes/quotes.json').join(' ').split('.'))
-import createText from '../';
-import MSDFShader from '../shaders/msdf';
+import data from 'sun-tzu-quotes/quotes.json';
 import palettes from 'nice-color-palettes';
+
+import createText from '../lib';
+import MSDFShader from '../shaders/msdf';
+
+import load from './load';
+
+var createOrbitViewer = orbitViewer(THREE);
+
+var quotes = shuffle(data.join(' ').split('.'))
+
 var palette = palettes[5]
 var background = palette.shift()
 
-require('./load')({
+load({
   font: 'fnt/Roboto-msdf.json',
   image: 'fnt/Roboto-msdf.png'
 }, start)
 
-function start (font, texture) {
+function start(font, texture) {
   var app = createOrbitViewer({
     clearColor: background,
     clearAlpha: 1.0,
@@ -31,7 +39,7 @@ function start (font, texture) {
     position: new THREE.Vector3()
   })
 
-  app.camera = new THREE.OrthographicCamera()
+  app.camera = new (THREE.OrthographicCamera as any)()
   app.camera.left = 0
   app.camera.top = 0
   app.camera.near = -1
@@ -60,7 +68,7 @@ function start (font, texture) {
     app.camera.updateProjectionMatrix()
   })
 
-  function createGlyph () {
+  function createGlyph() {
     var angle = (Math.random() * 2 - 1) * Math.PI
     var geom = createText({
       text: quotes[Math.floor(Math.random() * quotes.length)].split(/\s+/g).slice(0, 6).join(' '),
