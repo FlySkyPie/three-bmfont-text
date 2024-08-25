@@ -8,14 +8,12 @@
  */
 
 import * as THREE from 'three';
-import orbitViewer from 'three-orbit-viewer';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import createText from '../lib';
 import SDFShader from '../shaders/sdf';
 
 import load from './load';
-
-var createOrbitViewer = orbitViewer(THREE);
 
 // load up a 'fnt' and texture
 load({
@@ -24,14 +22,31 @@ load({
 }, start)
 
 function start(font, texture) {
-  var app = createOrbitViewer({
-    clearColor: 'rgb(40, 40, 40)',
-    clearAlpha: 1.0,
-    fov: 55,
-    position: new THREE.Vector3(0, -4, -2)
-  })
+  console.log("start", font, texture);
 
-  var maxAni = app.renderer.getMaxAnisotropy()
+  const container = document.createElement('div');
+  document.body.appendChild(container);
+
+  const renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer: true, });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  container.appendChild(renderer.domElement);
+
+  const app = {
+    camera: new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000),
+    scene: new THREE.Scene(),
+  };
+
+  window.addEventListener('resize', () => {
+    app.camera.aspect = window.innerWidth / window.innerHeight;
+    app.camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  app.camera.position.set(0, -4, -2);
+
+  var maxAni = renderer.getMaxAnisotropy()
 
   // setup our texture with some nice mipmapping etc
   texture.needsUpdate = true
@@ -68,14 +83,29 @@ function start(font, texture) {
 
   // scale it down so it fits in our 3D units
   var textAnchor = new THREE.Object3D()
-  textAnchor.scale.multiplyScalar(-0.005)
-  textAnchor.add(text)
-  app.scene.add(textAnchor)
+  textAnchor.scale.multiplyScalar(-0.005);
+  textAnchor.add(text);
+  app.scene.add(textAnchor);
+
+  // const axesHelper = new THREE.AxesHelper(5);
+  // app.scene.add(axesHelper);
+
+  const controls = new OrbitControls(app.camera, renderer.domElement);
+  controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+  controls.dampingFactor = 0.05;
+  controls.screenSpacePanning = false;
 
   // scroll text
-  app.on('tick', function (t) {
-    text.position.y -= 0.9
-  })
+  const animate = () => {
+    requestAnimationFrame(animate);
+
+    text.position.y -= 0.9;
+    controls.update();
+
+    renderer.render(app.scene, app.camera);
+  }
+
+  animate();
 }
 
 function getCopy() {

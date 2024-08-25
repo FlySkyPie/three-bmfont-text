@@ -76,6 +76,7 @@ function start(font, texture) {
 
   // update orthographic
   const animate = () => {
+    requestAnimationFrame(animate);
     renderer.render(app.scene, app.camera);
   }
 
