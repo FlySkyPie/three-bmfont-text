@@ -9,17 +9,15 @@
  */
 
 import * as THREE from 'three';
-import orbitViewer from 'three-orbit-viewer';
 import shuffle from 'array-shuffle';
 import data from 'sun-tzu-quotes/quotes.json';
 import palettes from 'nice-color-palettes';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import createText from '../lib';
 import MSDFShader from '../shaders/msdf';
 
 import load from './load';
-
-var createOrbitViewer = orbitViewer(THREE);
 
 var quotes = shuffle(data.join(' ').split('.'))
 
@@ -32,18 +30,38 @@ load({
 }, start)
 
 function start(font, texture) {
-  var app = createOrbitViewer({
-    clearColor: background,
-    clearAlpha: 1.0,
-    fov: 65,
-    position: new THREE.Vector3()
-  })
+  const containerElement = document.createElement('div');
+  document.body.appendChild(containerElement);
 
-  app.camera = new (THREE.OrthographicCamera as any)()
-  app.camera.left = 0
-  app.camera.top = 0
-  app.camera.near = -1
-  app.camera.far = 1000
+  const renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer: true, });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  containerElement.appendChild(renderer.domElement);
+
+  console.log("wtf", renderer.capabilities)
+
+  const app = {
+    // camera: new THREE.OrthographicCamera(0, 100, 0, 100, -1, 1000),
+    camera: new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000),
+    scene: new THREE.Scene(),
+  };
+  app.camera.position.set(0, -4, -2);
+
+  // var width = window.innerWidth;
+  // var height = window.innerHeight;
+  // app.camera.left = -width / 2;
+  // app.camera.right = width / 2;
+  // app.camera.top = -height / 2;
+  // app.camera.bottom = height / 2;
+  app.scene.background = new THREE.Color(background);
+
+  const axesHelper = new THREE.AxesHelper(5);
+  app.scene.add(axesHelper);
+
+  const controls = new OrbitControls(app.camera, renderer.domElement);
+  controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+  controls.dampingFactor = 0.05;
+  controls.screenSpacePanning = false;
 
   var container = new THREE.Object3D()
   app.scene.add(container)
@@ -54,19 +72,38 @@ function start(font, texture) {
 
   var time = 0
   // update orthographic
-  app.on('tick', function (dt) {
+
+  window.addEventListener('resize', () => {
+    app.camera.aspect = window.innerWidth / window.innerHeight;
+    app.camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  window.addEventListener('resize', () => {
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+    // app.camera.left = -width / 2;
+    // app.camera.right = width / 2;
+    // app.camera.top = -height / 2;
+    // app.camera.bottom = height / 2;
+    // app.camera.updateProjectionMatrix();
+  });
+
+
+  const animate = (dt: number) => {
+    requestAnimationFrame(animate);
+
     time += dt / 1000
     var s = (Math.sin(time * 0.5) * 0.5 + 0.5) * 2.0 + 0.5
-    container.scale.set(s, s, s)
-    // update camera
-    var width = app.engine.width
-    var height = app.engine.height
-    app.camera.left = -width / 2
-    app.camera.right = width / 2
-    app.camera.top = -height / 2
-    app.camera.bottom = height / 2
-    app.camera.updateProjectionMatrix()
-  })
+    container.scale.set(s, s, s);
+
+    controls.update();
+
+    renderer.render(app.scene, app.camera);
+  }
+
+  animate(0);
 
   function createGlyph() {
     var angle = (Math.random() * 2 - 1) * Math.PI
@@ -80,7 +117,8 @@ function start(font, texture) {
     var material = new THREE.RawShaderMaterial(MSDFShader({
       map: texture,
       transparent: true,
-      color: palette[Math.floor(Math.random() * palette.length)]
+      color: palette[Math.floor(Math.random() * palette.length)],
+      // glslVersion: THREE.GLSL3,
     }))
 
     var layout = geom.layout

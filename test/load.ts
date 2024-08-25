@@ -5,7 +5,7 @@ import * as THREE from 'three';
 export default function (opt, cb) {
   loadFont(opt.font, function (err, font) {
     if (err) throw err;
-    console.log(font);
+    // console.log(font);
     THREE.ImageUtils.loadTexture(opt.image, undefined, function (tex) {
       cb(font, tex)
     })

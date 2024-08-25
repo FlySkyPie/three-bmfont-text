@@ -78,7 +78,7 @@ class TextGeometry extends THREE.BufferGeometry {
     })
 
     // update vertex data
-    console.log(this)
+    // console.log(this)
     this.setIndex(indices)
     this.setAttribute('position', new THREE.BufferAttribute(positions, 2))
     this.setAttribute('uv', new THREE.BufferAttribute(uvs, 2))

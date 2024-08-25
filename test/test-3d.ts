@@ -22,8 +22,6 @@ load({
 }, start)
 
 function start(font, texture) {
-  console.log("start", font, texture);
-
   const container = document.createElement('div');
   document.body.appendChild(container);
 
