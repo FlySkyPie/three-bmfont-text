@@ -1,23 +1,14 @@
+import type { IGlyphs, TextLayout } from 'layout-bmfont-text';
+
 import * as THREE from 'three';
 import createLayout from 'layout-bmfont-text';
 import createIndices from 'quad-indices';
 
+import type { ICreateTextGeometryOptions } from './interfaces';
 import * as vertices from './vertices';
 import * as utils from './utils';
 
-export interface ICreateTextGeometryOptions {
-  font?: any;
-
-  text?: string;
-
-  multipage?: any;
-
-  flipY?: any;
-
-  align?: any;
-
-  width?: any;
-}
+export type { ICreateTextGeometryOptions };
 
 export default function createTextGeometry(opt: ICreateTextGeometryOptions) {
   return new TextGeometry(opt)
@@ -26,30 +17,31 @@ export default function createTextGeometry(opt: ICreateTextGeometryOptions) {
 class TextGeometry extends THREE.BufferGeometry {
   public _opt: ICreateTextGeometryOptions;
 
-  public layout: any;
+  public layout?: TextLayout;
 
-  public visibleGlyphs: any;
+  public visibleGlyphs: IGlyphs[] = [];
 
-  constructor(opt: ICreateTextGeometryOptions | string) {
+  constructor(opt: ICreateTextGeometryOptions) {
     super()
-
-    if (typeof opt === 'string') {
-      opt = { text: opt }
-    }
 
     // use these as default values for any subsequent
     // calls to update()
-    this._opt = Object.assign({}, opt)
+    this._opt = Object.assign({
+      flipY: true,
+      multipage: false,
+      align: 'left',
+      letterSpacing: 0,
+      lineHeight: opt.font.common.lineHeight,
+      tabSize: 0,
+      start: 0,
+      end: opt.text.length,
+    }, opt)
 
     // also do an initial setup...
     if (opt) this.update(opt)
   }
 
-  update(_opt: ICreateTextGeometryOptions | string) {
-    if (typeof _opt === 'string') {
-      _opt = { text: _opt }
-    }
-
+  public update(_opt: ICreateTextGeometryOptions) {
     // use constructor defaults
     _opt = Object.assign({}, this._opt, _opt)
 
@@ -112,7 +104,7 @@ class TextGeometry extends THREE.BufferGeometry {
     }
   }
 
-  computeBoundingSphere() {
+  public computeBoundingSphere() {
     if (this.boundingSphere === null) {
       this.boundingSphere = new THREE.Sphere()
     }
@@ -132,7 +124,7 @@ class TextGeometry extends THREE.BufferGeometry {
     }
   }
 
-  computeBoundingBox() {
+  public computeBoundingBox() {
     if (this.boundingBox === null) {
       this.boundingBox = new THREE.Box3()
     }

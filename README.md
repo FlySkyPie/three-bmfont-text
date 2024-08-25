@@ -54,7 +54,7 @@ The glyph layout is built on [layout-bmfont-text](https://github.com/Jam3/layout
 
 ## Usage
 
-[![NPM](https://nodei.co/npm/three-bmfont-text.png)](https://www.npmjs.com/package/three-bmfont-text)
+[![NPM](https://nodei.co/npm/@flyskypie/three-bmfont-text.png)](https://www.npmjs.com/package/@flyskypie/three-bmfont-text)
 
 #### `geometry = createText(opt)`
 
@@ -160,6 +160,9 @@ See [docs/multi.md](docs/multi.md)
 See [text-modules](https://github.com/mattdesl/text-modules) for more text and font related tools.
 
 ## Change Log
+
+- `4.0.0`
+  - Removed supported that passing string as options.
 
 - `3.0.0`
 
