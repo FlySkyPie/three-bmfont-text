@@ -1,7 +1,7 @@
 import assign from 'object-assign';
 import * as THREE from 'three';
 
-export default function createMultipageShader(opt) {
+export default function createMultipageShader(opt: any) {
   opt = opt || {}
   var opacity = typeof opt.opacity === 'number' ? opt.opacity : 1
   var precision = opt.precision || 'highp'
@@ -10,19 +10,19 @@ export default function createMultipageShader(opt) {
   var textures = opt.textures || []
   textures = Array.isArray(textures) ? textures : [textures]
 
-  var baseUniforms = {}
-  textures.forEach(function (tex, i) {
+  var baseUniforms: any = {}
+  textures.forEach(function (tex: any, i: any) {
     baseUniforms['texture' + i] = {
       type: 't',
       value: tex
     }
   })
 
-  var samplers = textures.map(function (tex, i) {
+  var samplers = textures.map(function (_: any, i: any) {
     return 'uniform sampler2D texture' + i + ';'
   }).join('\n')
 
-  var body = textures.map(function (tex, i) {
+  var body = textures.map(function (_: any, i: any) {
     var cond = i === 0 ? 'if' : 'else if'
     return [
       cond + ' (vPage == ' + i + '.0) {',

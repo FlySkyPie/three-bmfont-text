@@ -1,7 +1,7 @@
 import assign from 'object-assign';
 import * as THREE from 'three';
 
-export default function createSDFShader (opt) {
+export default function createSDFShader(opt: any) {
   opt = opt || {}
   var opacity = typeof opt.opacity === 'number' ? opt.opacity : 1
   var alphaTest = typeof opt.alphaTest === 'number' ? opt.alphaTest : 0.0001
