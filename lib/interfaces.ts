@@ -1,4 +1,4 @@
-import type { IResult } from 'load-bmfont';
+import type { IResult } from './load-bmfont-copy';
 
 export interface ICreateTextGeometryOptions {
     /**

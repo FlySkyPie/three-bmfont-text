@@ -1,4 +1,4 @@
-import type { IGlyphs, TextLayout } from 'layout-bmfont-text';
+import type { IGlyphs, TextLayout } from './layout-bmfont-text-copy';
 
 import * as THREE from 'three';
 import createLayout from 'layout-bmfont-text';
