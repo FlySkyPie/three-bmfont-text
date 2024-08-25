@@ -36,7 +36,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build"
+    "build": "tsc && vite build",
+    "deploy": "pnpm run build && pnpm publish --access public"
   },
   "keywords": [
     "bmfont",
