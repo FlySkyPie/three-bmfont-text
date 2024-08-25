@@ -9,11 +9,8 @@
  */
 
 import * as THREE from 'three';
-// import orbitViewer from 'three-orbit-viewer';
 
 import load from './load';
-
-// var createOrbitViewer = orbitViewer(THREE);
 
 import createText from '../lib';
 
