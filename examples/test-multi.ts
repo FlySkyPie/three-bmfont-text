@@ -13,29 +13,27 @@
     ... other options
   })
  */
-
+import type { IResult } from 'load-bmfont';
 import * as THREE from 'three';
-import Promise from 'bluebird';
-import loadBmfont from 'load-bmfont';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import createText from '../lib';
 import Shader from '../shaders/multipage';
 
-var loadFont = Promise.promisify(loadBmfont)
+import { loadFontPromise, loadTexturePromise } from './load';
 
 // parallel load our font / textures
 Promise.all([
-  loadFont('fnt/Norwester-Multi-64.fnt'),
-  loadTexture('fnt/Norwester-Multi_0.png'),
-  loadTexture('fnt/Norwester-Multi_1.png'),
-  loadTexture('fnt/Norwester-Multi_2.png'),
-  loadTexture('fnt/Norwester-Multi_3.png')
-]).then(function (assets) {
+  loadFontPromise('fnt/Norwester-Multi-64.fnt'),
+  loadTexturePromise('fnt/Norwester-Multi_0.png'),
+  loadTexturePromise('fnt/Norwester-Multi_1.png'),
+  loadTexturePromise('fnt/Norwester-Multi_2.png'),
+  loadTexturePromise('fnt/Norwester-Multi_3.png')
+]).then(function (assets: any) {
   start(assets[0], assets.slice(1))
 })
 
-function start(font, textures) {
+function start(font: IResult, textures: THREE.Texture[]) {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
@@ -105,10 +103,4 @@ function start(font, textures) {
   }
 
   animate();
-}
-
-function loadTexture(path) {
-  return new Promise(function (resolve, reject) {
-    THREE.ImageUtils.loadTexture(path, undefined, resolve, reject)
-  })
 }

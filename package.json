@@ -22,7 +22,6 @@
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@types/object-assign": "^4.0.33",
     "@types/three": "^0.131.1",
-    "bluebird": "^3.7.2",
     "load-bmfont": "^1.0.0",
     "object-assign": "^4.1.1",
     "sun-tzu-quotes": "^1.0.0",

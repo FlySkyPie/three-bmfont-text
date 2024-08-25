@@ -6,22 +6,16 @@
   We've also enabled anisotropy on the texture for
   crisp rendering at sharp angles.
  */
-
+import type { IResult } from 'load-bmfont';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import createText from '../lib';
 import SDFShader from '../shaders/sdf';
 
-import load from './load';
+import { loadFontPromise, loadTexturePromise } from './load';
 
-// load up a 'fnt' and texture
-load({
-  font: 'fnt/DejaVu-sdf.fnt',
-  image: 'fnt/DejaVu-sdf.png'
-}, start)
-
-function start(font, texture) {
+function start(font: IResult, texture: THREE.Texture) {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
@@ -120,3 +114,8 @@ function getCopy() {
     'Morbi viverra ipsum purus, eu fermentum urna tincidunt at. Maecenas feugiat, est quis feugiat interdum, est ante egestas sem, sed porttitor arcu dui quis nulla. Praesent sed auctor enim. Sed vel dolor et nunc bibendum placerat. Nunc venenatis luctus tortor, ut gravida nunc auctor semper. Suspendisse non orci ut justo iaculis pretium lobortis nec nunc. Donec non libero tellus. Mauris felis mauris, consequat sed tempus ut, tincidunt sit amet nibh. Nam pellentesque lacinia massa, quis rhoncus erat fringilla facilisis. Pellentesque nunc est, lobortis non libero vel, dapibus suscipit dui.'
   ].join('\n')
 }
+
+Promise.all([
+  loadFontPromise('fnt/DejaVu-sdf.fnt'),
+  loadTexturePromise('fnt/DejaVu-sdf.png'),
+]).then(([font, texture]) => start(font, texture));
