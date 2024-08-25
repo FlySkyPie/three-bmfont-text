@@ -15,14 +15,13 @@
  */
 
 import * as THREE from 'three';
-import orbitViewer from 'three-orbit-viewer';
 import Promise from 'bluebird';
 import loadBmfont from 'load-bmfont';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import createText from '../lib';
 import Shader from '../shaders/multipage';
 
-var createOrbitViewer = orbitViewer(THREE);
 var loadFont = Promise.promisify(loadBmfont)
 
 // parallel load our font / textures
@@ -37,18 +36,24 @@ Promise.all([
 })
 
 function start(font, textures) {
-  var app = createOrbitViewer({
-    clearColor: 'rgb(80, 80, 80)',
-    clearAlpha: 1.0,
-    fov: 65,
-    position: new THREE.Vector3()
-  })
+  const container = document.createElement('div');
+  document.body.appendChild(container);
 
-  app.camera = new (THREE.OrthographicCamera as any)()
-  app.camera.left = 0
-  app.camera.top = 0
-  app.camera.near = -100
-  app.camera.far = 100
+  const renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer: true, });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  container.appendChild(renderer.domElement);
+
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+  camera.position.set(0, 0, 100);
+
+  const scene = new THREE.Scene();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
 
   var geom = createText({
     multipage: true, // enable page buffers !
@@ -77,18 +82,29 @@ function start(font, textures) {
   text.position.set(padding, -layout.descender + layout.height + padding, 0)
 
   var textAnchor = new THREE.Object3D()
-  textAnchor.add(text)
-  textAnchor.scale.multiplyScalar(1 / (window.devicePixelRatio || 1))
-  app.scene.add(textAnchor)
+  textAnchor.add(text);
+  textAnchor.rotateX(Math.PI);
+  textAnchor.scale.set(0.1, 0.1, 0.1);
+  textAnchor.position.set(0, 0, 0);
+  scene.add(textAnchor)
 
-  // update orthographic
-  app.on('tick', function () {
-    var width = app.engine.width
-    var height = app.engine.height
-    app.camera.right = width
-    app.camera.bottom = height
-    app.camera.updateProjectionMatrix()
-  })
+  const axesHelper = new THREE.AxesHelper(5);
+  scene.add(axesHelper);
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+  controls.dampingFactor = 0.05;
+  controls.screenSpacePanning = false;
+
+  const animate = () => {
+    requestAnimationFrame(animate);
+
+    controls.update();
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
 }
 
 function loadTexture(path) {
