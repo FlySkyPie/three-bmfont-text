@@ -1,7 +1,7 @@
-export function pages(glyphs) {
+export function pages(glyphs:any) {
   var pages = new Float32Array(glyphs.length * 4 * 1)
   var i = 0
-  glyphs.forEach(function (glyph) {
+  glyphs.forEach(function (glyph:any) {
     var id = glyph.data.page || 0
     pages[i++] = id
     pages[i++] = id
@@ -11,10 +11,10 @@ export function pages(glyphs) {
   return pages
 }
 
-export function uvs(glyphs, texWidth, texHeight, flipY) {
+export function uvs(glyphs:any, texWidth:any, texHeight:any, flipY:any) {
   var uvs = new Float32Array(glyphs.length * 4 * 2)
   var i = 0
-  glyphs.forEach(function (glyph) {
+  glyphs.forEach(function (glyph:any) {
     var bitmap = glyph.data
     var bw = (bitmap.x + bitmap.width)
     var bh = (bitmap.y + bitmap.height)
@@ -46,10 +46,10 @@ export function uvs(glyphs, texWidth, texHeight, flipY) {
   return uvs
 }
 
-export function positions(glyphs) {
+export function positions(glyphs:any) {
   var positions = new Float32Array(glyphs.length * 4 * 2)
   var i = 0
-  glyphs.forEach(function (glyph) {
+  glyphs.forEach(function (glyph:any) {
     var bitmap = glyph.data
 
     // bottom left position

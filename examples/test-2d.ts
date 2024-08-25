@@ -9,17 +9,13 @@
  */
 
 import * as THREE from 'three';
-
-import load from './load';
+import type { IResult } from 'load-bmfont';
 
 import createText from '../lib';
 
-load({
-  font: 'fnt/Lato-Regular-64.fnt',
-  image: 'fnt/lato.png'
-}, start)
+import { loadFontPromise, loadTexturePromise } from './load';
 
-function start(font, texture) {
+function start(font: IResult, texture: THREE.Texture) {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
@@ -80,3 +76,8 @@ function start(font, texture) {
   animate();
 
 }
+
+Promise.all([
+  loadFontPromise('fnt/Lato-Regular-64.fnt'),
+  loadTexturePromise('fnt/lato.png'),
+]).then(([font, texture]) => start(font, texture));

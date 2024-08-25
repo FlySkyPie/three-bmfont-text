@@ -1,7 +1,7 @@
 var itemSize = 2
 var box = { min: [0, 0], max: [0, 0] }
 
-function bounds (positions) {
+function bounds(positions: any) {
   var count = positions.length / itemSize
   box.min[0] = positions[0]
   box.min[1] = positions[1]
@@ -18,13 +18,13 @@ function bounds (positions) {
   }
 }
 
-export function computeBox(positions, output) {
+export function computeBox(positions: any, output: any) {
   bounds(positions)
   output.min.set(box.min[0], box.min[1], 0)
   output.max.set(box.max[0], box.max[1], 0)
 }
 
-export function computeSphere(positions, output) {
+export function computeSphere(positions: any, output: any) {
   bounds(positions)
   var minX = box.min[0]
   var minY = box.min[1]

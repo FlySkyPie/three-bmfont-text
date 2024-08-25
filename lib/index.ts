@@ -5,22 +5,32 @@ import createIndices from 'quad-indices';
 import * as vertices from './vertices';
 import * as utils from './utils';
 
-export default function createTextGeometry(opt: any) {
+export interface ICreateTextGeometryOptions {
+  font?: any;
+
+  text?: string;
+
+  multipage?: any;
+
+  flipY?: any;
+
+  align?: any;
+
+  width?: any;
+}
+
+export default function createTextGeometry(opt: ICreateTextGeometryOptions) {
   return new TextGeometry(opt)
 };
 
 class TextGeometry extends THREE.BufferGeometry {
-  public _opt: any;
-  public layout: any;
-  public visibleGlyphs: any;
-  // public setIndex: any;
-  // public setAttribute: any;
-  // public attributes: any;
-  // public removeAttribute: any;
-  // public boundingBox: any;
-  // public boundingSphere: any;
+  public _opt: ICreateTextGeometryOptions;
 
-  constructor(opt: any) {
+  public layout: any;
+
+  public visibleGlyphs: any;
+
+  constructor(opt: ICreateTextGeometryOptions | string) {
     super()
 
     if (typeof opt === 'string') {
@@ -35,25 +45,25 @@ class TextGeometry extends THREE.BufferGeometry {
     if (opt) this.update(opt)
   }
 
-  update(opt: any) {
-    if (typeof opt === 'string') {
-      opt = { text: opt }
+  update(_opt: ICreateTextGeometryOptions | string) {
+    if (typeof _opt === 'string') {
+      _opt = { text: _opt }
     }
 
     // use constructor defaults
-    opt = Object.assign({}, this._opt, opt)
+    _opt = Object.assign({}, this._opt, _opt)
 
-    if (!opt.font) {
+    if (!_opt.font) {
       throw new TypeError('must specify a { font } in options')
     }
 
-    this.layout = createLayout(opt)
+    this.layout = createLayout(_opt)
 
     // get vec2 texcoords
-    var flipY = opt.flipY !== false
+    var flipY = _opt.flipY !== false
 
     // the desired BMFont data
-    var font = opt.font
+    var font = _opt.font
 
     // determine texture size from font file
     var texWidth = font.common.scaleW
@@ -84,10 +94,10 @@ class TextGeometry extends THREE.BufferGeometry {
     this.setAttribute('uv', new THREE.BufferAttribute(uvs, 2))
 
     // update multipage data
-    if (!opt.multipage && 'page' in this.attributes) {
+    if (!_opt.multipage && 'page' in this.attributes) {
       // disable multipage rendering
       this.removeAttribute('page')
-    } else if (opt.multipage) {
+    } else if (_opt.multipage) {
       // enable multipage rendering
       var pages = vertices.pages(glyphs)
       this.setAttribute('page', new THREE.BufferAttribute(pages, 1))
